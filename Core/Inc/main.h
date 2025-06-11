@@ -36,7 +36,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern volatile uint16_t step_position;
+extern volatile int16_t step_position;
 extern volatile float percent_step;
 extern volatile uint8_t state_motor_step;
 extern volatile uint32_t last_time_step;

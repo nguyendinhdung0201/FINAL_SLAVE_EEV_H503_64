@@ -85,7 +85,7 @@ void Stepper_Run(Stepper* stepper) {
         // Thực hiện bước
         Stepper_SetPhase(stepper, stepper->current_phase);
         stepper->current_step++;
-        uint16_t next_step = step_position + (stepper->direction ? -1 : 1);
+        int16_t next_step = step_position + (stepper->direction ? -1 : 1);
         if (next_step >= 0 && next_step <= 500) {
             step_position = next_step;
         }
