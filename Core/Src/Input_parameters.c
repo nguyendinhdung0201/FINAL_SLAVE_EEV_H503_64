@@ -71,7 +71,7 @@ static void read_adc_sensor(ADC_HandleTypeDef* hadc1){
 	adc_pressure_sensors.ADC_high_pressure = SimpleKalmanFilter_updateEstimate(&filter_pressure_sensors.filter_high_pressure_sensor, (float)ADC_ReadChannel(hadc1, ADC_CHANNEL_15));
 }
 static void read_adc_sensor_dma(){
-	adc_vref = SimpleKalmanFilter_updateEstimate(&filter_vref, adc_buffer[0]);
+	adc_vref = SimpleKalmanFilter_updateEstimate(&filter_vref, (float)adc_buffer[0]);
 	adc_temperature_sensors.ADC_hoi_ve = SimpleKalmanFilter_updateEstimate(&filter_temperature_sensors.filter_temperature_sensor_hoi_ve, (float)adc_buffer[1]);
 	adc_temperature_sensors.ADC_dau_day = SimpleKalmanFilter_updateEstimate(&filter_temperature_sensors.filter_temperature_sensor_dau_day, (float)adc_buffer[2]);
 	adc_pressure_sensors.ADC_low_pressure = SimpleKalmanFilter_updateEstimate(&filter_pressure_sensors.filter_low_pressure_sensor, (float)adc_buffer[3]);

@@ -273,7 +273,7 @@ void control_EEV(){
 //        	step_position = 0;
 //			percent_step = 0.0f;
 //			Stepper_Move(&motor, -500);
-			step_position = (step_position - 60 > 0) ? step_position - 60 : 0;
+			step_position = (step_position - 80 > 0) ? step_position - 80 : 0;
         	percent_step = (step_position/500.0f)*100.0f;
             Stepper_Move(&motor, -(500-step_position));
             current_state_eev = STATE_OPENING;
@@ -339,7 +339,7 @@ void control_EEV(){
 		            }
 		            // Nếu trong quá trình ch�? mà chân input chuyển thành mức thấp
 		            if(pin_state_run == GPIO_PIN_RESET) {
-		            	step_position = (step_position + 60 < 500) ? step_position + 60 : 500;
+		            	step_position = (step_position + 80 < 500) ? step_position + 80 : 500;
 		            	percent_step = (step_position/500.0f)*100.0f;
 		                Stepper_Move(&motor, step_position);
 		                current_state_eev = STATE_CLOSING;
@@ -527,6 +527,10 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  uint32_t start_time = HAL_GetTick();
+  while((uint32_t)(HAL_GetTick() - start_time) <= 600){
+	  EWDG_Refresh();
+  }
 
   EEPROM_Init(&hEEPROM_final, &hi2c1, EEPROM_DEFAULT_7BIT_ADDR);
   EEPROM_ReadInt16(&hEEPROM_final, 0, &nhiet_do_bat_lam_mat);
