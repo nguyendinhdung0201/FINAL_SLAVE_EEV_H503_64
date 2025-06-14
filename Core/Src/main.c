@@ -195,11 +195,11 @@ void convert_setpoint(){
 //        { 17.0f, 9.0f },
 //        { 15.0f, 11.0f},
 //        { 0.0f,  13.0f}
-        { 23.0f, 5.0f },
-        { 20.0f, 7.0f },
-        { 17.0f, 9.0f },
-        { 15.0f, 11.0f},
-        { 0.0f,  13.0f}
+        { 23.0f, 3.0f},
+        { 20.0f, 5.0f},
+        { 17.0f, 7.0f},
+        { 15.0f, 9.0f},
+        { 0.0f,  11.0f}
     };
     static float last_setpoint = -1;  // Lưu giá trị cũ
     float new_setpoint = pid.setpoint;
@@ -264,8 +264,16 @@ uint32_t timer = 0;
 uint8_t init_done = 0;      // C�? đánh dấu đã hoàn thành khởi tạo
 void control_EEV(){
 	static uint8_t check_run_defrost = 0;
+//	static GPIO_PinState pin_state_run = GPIO_PIN_RESET;
+//	static GPIO_PinState pin_state_run_defrost = GPIO_PIN_RESET;
 	GPIO_PinState pin_state_run = HAL_GPIO_ReadPin(RUN_GPIO_Port, RUN_Pin);
 	GPIO_PinState pin_state_run_defrost = HAL_GPIO_ReadPin(RUN_Defrost_GPIO_Port, RUN_Defrost_Pin);
+//	if(pin_state_run_check == GPIO_PIN_SET || pin_state_run_defrost_check == GPIO_PIN_SET){
+//		if((uint32_t)(HAL_GetTick() - ))
+//	}
+
+
+
 	switch(pin_state_run_defrost){
 	case GPIO_PIN_SET:
 		if(check_run_defrost == 0 && !Stepper_IsMoving(&motor)){
@@ -582,6 +590,7 @@ int main(void)
 	  Data_Write(&modbus_slave);
 
 	  reset_UART_DMA();
+	  Reset_ADC_DMA();
 	  HAL_IWDG_Refresh(&hiwdg);
 	  EWDG_Refresh();
   }
