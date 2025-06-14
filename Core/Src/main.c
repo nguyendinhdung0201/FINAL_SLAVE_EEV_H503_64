@@ -496,6 +496,48 @@ float voltage_hoive;
 float voltage_dauday;
 float voltage_pl;
 float voltage_ph;
+// Hàm để lấy và gửi các cờ reset
+void GetAndSendResetFlags() {
+	printLOGDATA("\r\n--- Nguyen nhan Reset MCU ---\r\n");
+
+    // Kiểm tra từng cờ reset
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_LPWRRST) != RESET) {
+    	printLOGDATA("Nguyen nhan: Reset do Quản lý Năng lượng thấp (LPWRRSTF)\r\n");
+    }
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST) != RESET) {
+    	printLOGDATA("Nguyen nhan: Reset do Watchdog cửa sổ (WWDGRSTF)\r\n");
+    }
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST) != RESET) {
+    	printLOGDATA("Nguyen nhan: Reset do Watchdog độc lập (IWDGRSTF)\r\n");
+    }
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST) != RESET) {
+    	printLOGDATA("Nguyen nhan: Reset do Phần mềm (SFTRSTF)\r\n");
+    }
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST) != RESET) {
+    	printLOGDATA("Nguyen nhan: Reset do Chân ngoài (PINRSTF)\r\n");
+    }
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_BORRST) != RESET) {
+    	printLOGDATA("Nguyen nhan: Reset do tụt áp nguồn (BORRSTF)\r\n");
+    }
+    // Bạn có thể thêm các kiểm tra khác cho các cờ như HSERDYF, HSIRDYF, LSERDYF, LSIRDYF, PLLRDYF nếu cần,
+    // mặc dù chúng thường chỉ ra sự sẵn sàng của bộ dao động chứ không phải nguyên nhân reset.
+
+    // Nếu không có cờ cụ thể nào được đặt (ví dụ: bật nguồn lần đầu sau khi nạp firmware)
+    if ( ( __HAL_RCC_GET_FLAG(RCC_FLAG_LPWRRST) == RESET) &&
+         ( __HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST) == RESET) &&
+         ( __HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST) == RESET) &&
+         ( __HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST) == RESET) &&
+         ( __HAL_RCC_GET_FLAG(RCC_FLAG_PINRST) == RESET) &&
+         ( __HAL_RCC_GET_FLAG(RCC_FLAG_BORRST) == RESET))
+    {
+    	printLOGDATA("Nguyen nhan: Khong ro / Bat nguon lan dau (Khong co co nao duoc dat cu the)\r\n");
+    }
+
+    printLOGDATA("--------------------------\r\n\r\n");
+
+    // Xóa tất cả các cờ reset để phát hiện reset lần sau
+    __HAL_RCC_CLEAR_RESET_FLAGS();
+}
 /* USER CODE END 0 */
 
 /**
@@ -561,6 +603,8 @@ int main(void)
 
   Modbus_Init(&modbus_slave, &huart1, USART1_IRQn);
   HAL_TIM_Base_Start_IT(&htim2);
+
+  GetAndSendResetFlags();
   /* USER CODE END 2 */
 
   /* Infinite loop */
